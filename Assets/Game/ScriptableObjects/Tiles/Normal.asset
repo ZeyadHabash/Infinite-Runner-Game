@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c7703a93ddaee4eacb2cec54cf7f56, type: 3}
+  m_Name: Normal
+  m_EditorClassIdentifier: 
+  <TileName>k__BackingField: Normal
+  <TileColor>k__BackingField: {r: 0.78113204, g: 0.7531292, b: 0.7531292, a: 0}
+  <TilePrefab>k__BackingField: {fileID: 236029428497869284, guid: f4fd8e38f06af364c8c6f4fe76a7e07c,
+    type: 3}

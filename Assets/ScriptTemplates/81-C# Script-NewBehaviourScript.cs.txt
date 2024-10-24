@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+    #ROOTNAMESPACEBEGIN#
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    #region Fields
+    #NOTRIM#
+    #endregion
+
+    #NOTRIM#
+
+    #region Properties
+    #NOTRIM#
+    #endregion
+
+    #NOTRIM#
+
+    #region Events/Delegates
+    #NOTRIM#
+    #endregion
+
+    #NOTRIM#
+
+    #region MonoBehaviour Methods
+    #NOTRIM#
+    #endregion
+
+    #NOTRIM#
+
+    #region Public Methods
+    #NOTRIM#
+    #endregion
+
+    #NOTRIM#
+
+    #region Private Methods
+    #NOTRIM#
+    #endregion
+}
+#ROOTNAMESPACEEND#
