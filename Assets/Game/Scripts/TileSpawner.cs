@@ -15,6 +15,7 @@ namespace InfiniteRunner
         [Header("Object Pools")]
         [SerializeField] private SuperObjectPoolSO _tilePool;
 
+        [SerializeField] private Vector3 _spawnDistance = Vector3.forward * 5;
         private Vector3 _spawnPosition;
         private bool _firstSpawn = true;
 
@@ -85,7 +86,7 @@ namespace InfiniteRunner
             SpawnTile(_spawnPosition + Vector3.right * 5, tileToBeNormal == 2 || _firstSpawn);
 
             // Update spawn position
-            _spawnPosition += Vector3.forward * 5;
+            _spawnPosition += _spawnDistance;
         }
 
         private void SpawnTile(Vector3 position, bool isNormal = false)

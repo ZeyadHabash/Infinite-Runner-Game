@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TilePool
   m_EditorClassIdentifier: 
   prefab: {fileID: 3149677528274957067, guid: f4fd8e38f06af364c8c6f4fe76a7e07c, type: 3}
-  defaultCapacity: 90
+  defaultCapacity: 60
   defaultSpawnLocation: {x: 0, y: 0, z: 0}
   useDefaultSpawnRotation: 1
   defaultSpawnRotation: {x: 0, y: 0, z: 0, w: 0}
