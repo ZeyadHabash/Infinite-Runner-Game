@@ -163,6 +163,12 @@ namespace InfiniteRunner
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 
+        public void ReturnToMainMenu()
+        {
+            Time.timeScale = 1;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        }
+
         public void ResetFuel()
         {
             _currentFuel = _initialFuel;

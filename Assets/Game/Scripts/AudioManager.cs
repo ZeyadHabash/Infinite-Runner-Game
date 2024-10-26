@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Obvious.Soap;
 using UnityEngine;
 
 namespace InfiniteRunner
@@ -11,6 +12,8 @@ namespace InfiniteRunner
         [SerializeField] private AudioClip _backgroundMusic;
         [SerializeField] private float _backgroundMusicVolume = 1;
         private AudioSource _backgroundMusicAudioSource;
+
+        [SerializeField] private BoolVariable _isMuted;
         #endregion
 
 
@@ -30,7 +33,17 @@ namespace InfiniteRunner
         #region MonoBehaviour Methods
         private void Start()
         {
-            _backgroundMusicAudioSource = PlayBackgroundMusic(_backgroundMusic, transform, _backgroundMusicVolume);
+            if (!_isMuted)
+                _backgroundMusicAudioSource = PlayBackgroundMusic(_backgroundMusic, transform, _backgroundMusicVolume);
+        }
+
+        private void OnEnable()
+        {
+            _isMuted.OnValueChanged += OnMute;
+        }
+        private void OnDisable()
+        {
+            _isMuted.OnValueChanged -= OnMute;
         }
         #endregion
 
@@ -40,6 +53,10 @@ namespace InfiniteRunner
 
         public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume = 1, float length = 1)
         {
+            if (_isMuted)
+            {
+                return;
+            }
             // Create a new GameObject
             AudioSource audioSource = Instantiate(_audioSourcePrefab, spawnTransform.position, Quaternion.identity);
 
@@ -61,6 +78,10 @@ namespace InfiniteRunner
 
         public AudioSource PlayBackgroundMusic(AudioClip audioClip, Transform spawnTransform, float volume = 1)
         {
+            if (_isMuted)
+            {
+                return null;
+            }
             // Create a new GameObject
             AudioSource audioSource = Instantiate(_audioSourcePrefab, spawnTransform.position, Quaternion.identity);
 
@@ -104,6 +125,25 @@ namespace InfiniteRunner
             _backgroundMusicAudioSource.volume = _backgroundMusicVolume;
         }
 
+        public void OnMute(bool isMuted)
+        {
+            if (isMuted)
+            {
+                StopAllAudio();
+            }
+            else
+            {
+                StartBackgroundMusic();
+            }
+        }
+        public void StopAllAudio()
+        {
+            AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
+            foreach (AudioSource audioSource in audioSources)
+            {
+                audioSource.Stop();
+            }
+        }
         #endregion
 
 

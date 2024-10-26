@@ -178,7 +178,7 @@ namespace InfiniteRunner
                     }
                     break;
                 case "Sticky":
-                    AudioManager.Instance.PlaySoundFXClip(_stickyClips[UnityEngine.Random.Range(0, _stickyClips.Length)], other.gameObject.transform, _volume * 1.5f);
+                    AudioManager.Instance.PlaySoundFXClip(_stickyClips[UnityEngine.Random.Range(0, _stickyClips.Length)], other.gameObject.transform, _volume);
                     if (_playerSpeed.Value.Equals("High"))
                     {
                         _onPlayerSpeedChanged.Raise();

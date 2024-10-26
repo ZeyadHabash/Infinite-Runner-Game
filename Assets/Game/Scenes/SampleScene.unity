@@ -7226,7 +7226,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1468168409}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 57141854}
+        m_TargetAssemblyTypeName: InfiniteRunner.GameManager, Assembly-CSharp
+        m_MethodName: ReturnToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1468168409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7436,7 +7448,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1518052620}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 57141854}
+        m_TargetAssemblyTypeName: InfiniteRunner.GameManager, Assembly-CSharp
+        m_MethodName: ReturnToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1518052620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7688,6 +7712,7 @@ MonoBehaviour:
     type: 3}
   _backgroundMusic: {fileID: 8300000, guid: daeae824209b18c48bbab503afb9f54b, type: 3}
   _backgroundMusicVolume: 0.3
+  _isMuted: {fileID: 11400000, guid: 8b0c6f42dd5950e4ba0661eabe5073bc, type: 2}
 --- !u!1 &1764368448
 GameObject:
   m_ObjectHideFlags: 0
