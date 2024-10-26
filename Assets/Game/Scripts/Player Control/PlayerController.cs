@@ -67,6 +67,7 @@ namespace InfiniteRunner
         [SerializeField] private ScriptableEventNoParam _onPlayerDeath;
         [SerializeField] private ScriptableEventNoParam _onGamePaused;
         [SerializeField] private ScriptableEventNoParam _onEnterSupplies;
+        [SerializeField] private ScriptableEventNoParam _onPlayerSpeedChanged;
         #endregion
 
         #region MonoBehaviour Methods
@@ -160,6 +161,7 @@ namespace InfiniteRunner
                 case "Boost":
                     if (_playerSpeed.Value.Equals("Normal"))
                     {
+                        _onPlayerSpeedChanged.Raise();
                         _playerSpeed.Value = "High";
                         _speed *= 2;
                     }
@@ -167,6 +169,7 @@ namespace InfiniteRunner
                 case "Sticky":
                     if (_playerSpeed.Value.Equals("High"))
                     {
+                        _onPlayerSpeedChanged.Raise();
                         _playerSpeed.Value = "Normal";
                         _speed /= 2;
                     }
