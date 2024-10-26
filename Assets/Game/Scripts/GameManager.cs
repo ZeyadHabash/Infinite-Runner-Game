@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Obvious.Soap;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -28,14 +29,15 @@ namespace InfiniteRunner
         [Header("Resources")]
         [SerializeField] private int _initialScore = 0;
         [SerializeField] private int _initialFuel = 50;
-        [SerializeField] private int _currentScore = 0;
-        [SerializeField] private int _currentFuel = 50;
+        private int _currentScore;
+        private int _currentFuel;
 
         private int _fuelDecreaseRate = 1;
         private int _scoreIncreaseRate = 1;
 
-        private bool _isGameOver = false;
-        private bool _isPaused = false;
+        [Header("SOAP")]
+        [SerializeField] private BoolVariable _isGameOver;
+        [SerializeField] private BoolVariable _isPaused;
 
         #endregion
 
@@ -57,14 +59,26 @@ namespace InfiniteRunner
 
         private IEnumerator Start()
         {
+            // Initialize the score and fuel
+            ResetFuel();
+            ResetScore();
+
             // Initialize the score and fuel text
             _scoreText.SetText(_scoreText.text, _initialScore);
             _fuelText.SetText(_fuelText.text, _initialFuel);
+
+            // Initialize selected buttons in event system
             EventSystem.current.SetSelectedGameObject(null);
+
+            // Reset the isGameOver and isPaused variables
+            _isPaused.Value = false;
+            _isGameOver.Value = false;
 
             while (!_isGameOver)
             {
                 yield return new WaitForSeconds(1);
+                if (_isPaused || _isGameOver)
+                    continue;
                 IncreaseScore(_scoreIncreaseRate);
                 DecreaseFuel(_fuelDecreaseRate);
                 if (_currentFuel <= 0)
@@ -88,17 +102,16 @@ namespace InfiniteRunner
             {
                 Time.timeScale = 1;
                 _pauseCanvas.gameObject.SetActive(false);
-                _isPaused = false;
+                _isPaused.Value = false;
                 EventSystem.current.SetSelectedGameObject(null);
             }
             else
             {
                 Time.timeScale = 0;
                 _pauseCanvas.gameObject.SetActive(true);
-                _isPaused = true;
+                _isPaused.Value = true;
                 EventSystem.current.SetSelectedGameObject(_pauseFirstSelectedButton);
             }
-
         }
         public void GameOver()
         {
@@ -108,7 +121,7 @@ namespace InfiniteRunner
             Time.timeScale = 0; // Pause the game
             _gameOverCanvas.gameObject.SetActive(true);
             _hudCanvas.gameObject.SetActive(false);
-            _isGameOver = true;
+            _isGameOver.Value = true;
 
             EventSystem.current.SetSelectedGameObject(_gameOverFirstSelectedButton);
             _finalScoreText.SetText(_finalScoreText.text, _currentScore);
@@ -129,7 +142,7 @@ namespace InfiniteRunner
         public void RestartGame()
         {
             Time.timeScale = 1;
-            _isGameOver = false;
+            _isGameOver.Value = false;
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 

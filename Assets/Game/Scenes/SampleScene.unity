@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 57141853}
   - component: {fileID: 57141854}
+  - component: {fileID: 57141855}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -176,8 +177,57 @@ MonoBehaviour:
   _gameOverFirstSelectedButton: {fileID: 1892360678}
   _initialScore: 0
   _initialFuel: 50
-  _currentScore: 0
-  _currentFuel: 50
+  _isGameOver: {fileID: 11400000, guid: db962b5c886688544aec66fb81caea50, type: 2}
+  _isPaused: {fileID: 11400000, guid: 3b311f88b78e25a40894eb5966786e77, type: 2}
+--- !u!114 &57141855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57141852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e64750262007f204b879cd45e18965e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _binding: 0
+  _disableAfterSubscribing: 0
+  _eventResponses:
+  - Delay: 0
+    _scriptableEvent: {fileID: 11400000, guid: 08f59f37a4aa5d7408308fa4802d4f38, type: 2}
+    _response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 57141854}
+          m_TargetAssemblyTypeName: InfiniteRunner.GameManager, Assembly-CSharp
+          m_MethodName: GameOver
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - Delay: 0
+    _scriptableEvent: {fileID: 11400000, guid: 4b4a7b5fa6f49cd4b9c914cf760528b9, type: 2}
+    _response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 57141854}
+          m_TargetAssemblyTypeName: InfiniteRunner.GameManager, Assembly-CSharp
+          m_MethodName: PauseGame
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &182299502
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,16 +1038,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileConfigs:
   - {fileID: 11400000, guid: 901e952f6e9da7c42b6b7439962b1063, type: 2}
-  - {fileID: 11400000, guid: 901e952f6e9da7c42b6b7439962b1063, type: 2}
-  - {fileID: 11400000, guid: 901e952f6e9da7c42b6b7439962b1063, type: 2}
-  - {fileID: 11400000, guid: 901e952f6e9da7c42b6b7439962b1063, type: 2}
-  - {fileID: 11400000, guid: 901e952f6e9da7c42b6b7439962b1063, type: 2}
   - {fileID: 11400000, guid: e681c88b3c968b648bf14b66c5215dd8, type: 2}
   - {fileID: 11400000, guid: 13724770582878541a1d879e4268a333, type: 2}
   - {fileID: 11400000, guid: e9e16480be99ef748b56feca1a63d366, type: 2}
   - {fileID: 11400000, guid: bbd8fa6d8a0f3284c9022aba9c2fcde7, type: 2}
   - {fileID: 11400000, guid: b78842c9cb0a3d1419b890bacb980736, type: 2}
   - {fileID: 11400000, guid: 8fef1e856bec2f048a561c27bf6c06f0, type: 2}
+  - {fileID: 11400000, guid: 901e952f6e9da7c42b6b7439962b1063, type: 2}
   _tilePool: {fileID: 11400000, guid: afc909936a8856d49a644bf2d1bffe7e, type: 2}
   _spawnDistance: {x: 0, y: 0, z: 5}
 --- !u!4 &612525891
@@ -2897,6 +2944,10 @@ MonoBehaviour:
   _leftPositionX: -5
   _rightPositionX: 5
   _middlePositionX: 0
+  _isGameOver: {fileID: 11400000, guid: db962b5c886688544aec66fb81caea50, type: 2}
+  _isPaused: {fileID: 11400000, guid: 3b311f88b78e25a40894eb5966786e77, type: 2}
+  _onPlayerDeath: {fileID: 11400000, guid: 08f59f37a4aa5d7408308fa4802d4f38, type: 2}
+  _onGamePaused: {fileID: 11400000, guid: 4b4a7b5fa6f49cd4b9c914cf760528b9, type: 2}
 --- !u!114 &1783426873
 MonoBehaviour:
   m_ObjectHideFlags: 0

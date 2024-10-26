@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Obvious.Soap;
@@ -42,8 +43,12 @@ namespace InfiniteRunner
 
         private bool _isMoving = false;
         private PlayerPosition _playerPosition = PlayerPosition.Middle;
-        private bool _isGameOver = false;
-        private bool _isPaused = false;
+
+        [SerializeField] private BoolVariable _isGameOver;
+        [SerializeField] private BoolVariable _isPaused;
+
+        [SerializeField] private ScriptableEvent<bool> _onPlayerDeath;
+        [SerializeField] private ScriptableEvent<bool> _onGamePaused;
 
         #endregion
 
@@ -70,9 +75,6 @@ namespace InfiniteRunner
             _moveAction.Enable();
             _jumpAction.Enable();
             _pauseAction.Enable();
-
-            _isGameOver = false;
-            _isPaused = false;
         }
 
         private void OnEnable()
@@ -80,6 +82,7 @@ namespace InfiniteRunner
             _moveAction.performed += OnMove;
             _jumpAction.performed += OnJump;
             _pauseAction.performed += OnPause;
+            _isPaused.OnValueChanged += OnGamePaused;
         }
 
         private void OnDisable()
@@ -87,6 +90,7 @@ namespace InfiniteRunner
             _moveAction.performed -= OnMove;
             _jumpAction.performed -= OnJump;
             _pauseAction.performed -= OnPause;
+            _isPaused.OnValueChanged -= OnGamePaused;
         }
 
         private void Start()
@@ -97,6 +101,8 @@ namespace InfiniteRunner
 
         private void Update()
         {
+            if (_isPaused || _isGameOver)
+                return;
             // Move the player forward
             transform.position += Vector3.forward * _speed * Time.deltaTime;
 
@@ -123,31 +129,18 @@ namespace InfiniteRunner
                     _isMoving = false;
             }
 
-            // Check if player fell off the platform
-            if (transform.position.y < -5)
-            {
-                OnGameOver();
-            }
-        }
-        private void LateUpdate()
-        {
-            if (Time.timeScale == 0)
-            {
-                _jumpAction.Disable();
-                _moveAction.Disable();
-            }
-            else
-            {
-                _jumpAction.Enable();
-                _moveAction.Enable();
-            }
+            // // Check if player fell off the platform
+            // if (transform.position.y < -5)
+            // {
+            //     _onPlayerDeath.Raise(true);
+            // }
         }
 
         private void OnCollisionEnter(Collision other)
         {
             if (other.gameObject.CompareTag("Obstacle"))
             {
-                OnGameOver();
+                _onPlayerDeath.Raise(true);
             }
         }
 
@@ -192,15 +185,21 @@ namespace InfiniteRunner
         private void OnPause(InputAction.CallbackContext context)
         {
             // Pause the game
-            GameManager.Instance.PauseGame();
+            _onGamePaused.Raise(true);
         }
 
-        private void OnGameOver()
+        private void OnGamePaused(bool isGamePaused)
         {
-            if (_isGameOver)
-                return;
-            GameManager.Instance.GameOver();
-            _isGameOver = true;
+            if (isGamePaused)
+            {
+                _moveAction.Disable();
+                _jumpAction.Disable();
+            }
+            else
+            {
+                _moveAction.Enable();
+                _jumpAction.Enable();
+            }
         }
 
         private void MoveLeft()
