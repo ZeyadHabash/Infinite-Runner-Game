@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Obvious.Soap;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -32,6 +33,10 @@ namespace InfiniteRunner
         [SerializeField] private float _rightPositionX = 5;
         [SerializeField] private float _middlePositionX = 0;
 
+        [Header("Other Configs")]
+        [SerializeField] private int _defaultFuelRate = 1;
+        [SerializeField] private int _burnFuelRate = 10;
+
         private Rigidbody _rigidBody;
         private LayerMask _groundLayer;
         private Collider _playerCollider;
@@ -44,11 +49,12 @@ namespace InfiniteRunner
         private bool _isMoving = false;
         private PlayerPosition _playerPosition = PlayerPosition.Middle;
 
+        [Header("SOAP Variables")]
         [SerializeField] private BoolVariable _isGameOver;
         [SerializeField] private BoolVariable _isPaused;
+        [SerializeField] private StringVariable _playerSpeed;
+        [SerializeField] private IntVariable _fuelDecreaseRate;
 
-        [SerializeField] private ScriptableEvent<bool> _onPlayerDeath;
-        [SerializeField] private ScriptableEvent<bool> _onGamePaused;
 
         #endregion
 
@@ -57,6 +63,10 @@ namespace InfiniteRunner
         #endregion
 
         #region Events/Delegates
+        [Header("SOAP Events")]
+        [SerializeField] private ScriptableEventNoParam _onPlayerDeath;
+        [SerializeField] private ScriptableEventNoParam _onGamePaused;
+        [SerializeField] private ScriptableEventNoParam _onEnterSupplies;
         #endregion
 
         #region MonoBehaviour Methods
@@ -72,9 +82,13 @@ namespace InfiniteRunner
             _jumpAction = _playerInput.actions["Jump"];
             _pauseAction = _playerInput.actions["Pause"];
 
+            // Enable the input actions
             _moveAction.Enable();
             _jumpAction.Enable();
             _pauseAction.Enable();
+
+            // Set the player speed
+            _playerSpeed.Value = "Normal";
         }
 
         private void OnEnable()
@@ -138,9 +152,39 @@ namespace InfiniteRunner
 
         private void OnCollisionEnter(Collision other)
         {
-            if (other.gameObject.CompareTag("Obstacle"))
+            switch (other.gameObject.tag)
             {
-                _onPlayerDeath.Raise(true);
+                case "Obstacle":
+                    _onPlayerDeath.Raise();
+                    break;
+                case "Boost":
+                    if (_playerSpeed.Value.Equals("Normal"))
+                    {
+                        _playerSpeed.Value = "High";
+                        _speed *= 2;
+                    }
+                    break;
+                case "Sticky":
+                    if (_playerSpeed.Value.Equals("High"))
+                    {
+                        _playerSpeed.Value = "Normal";
+                        _speed /= 2;
+                    }
+                    break;
+                case "Burning":
+                    _fuelDecreaseRate.Value = _burnFuelRate;
+                    break;
+                case "Supplies":
+                    _onEnterSupplies.Raise();
+                    break;
+            }
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            if (other.gameObject.CompareTag("Burning"))
+            {
+                _fuelDecreaseRate.Value = _defaultFuelRate;
             }
         }
 
@@ -185,7 +229,7 @@ namespace InfiniteRunner
         private void OnPause(InputAction.CallbackContext context)
         {
             // Pause the game
-            _onGamePaused.Raise(true);
+            _onGamePaused.Raise();
         }
 
         private void OnGamePaused(bool isGamePaused)

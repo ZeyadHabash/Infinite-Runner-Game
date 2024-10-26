@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Obstacle
+  - Normal
+  - Boost
+  - Sticky
+  - Burning
+  - Supplies
   layers:
   - Default
   - TransparentFX

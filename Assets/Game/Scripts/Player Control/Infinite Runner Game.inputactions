@@ -68,39 +68,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "TouchScreen",
-                    "id": "d523b0da-ccca-496c-be22-bca07e879d85",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "4eff3030-c9c5-43bf-9631-18493d46ea60",
-                    "path": "<Touchscreen>/delta/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "e5120992-105e-4ae3-9fc1-84526a31c0b4",
-                    "path": "<Touchscreen>/delta/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "97b7641d-e0a3-4236-ab5d-2a148e6da395",
                     "path": "<Keyboard>/escape",

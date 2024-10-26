@@ -61,16 +61,16 @@ MonoBehaviour:
     color: {r: 0, g: 0, b: 0, a: 0}
   - TileType: 3
     Tile: {fileID: 8476588010910221000}
-    color: {r: 0.7660377, g: 0.7175018, b: 0.27028123, a: 0}
+    color: {r: 0, g: 0.37291405, b: 0.98490566, a: 0}
   - TileType: 4
     Tile: {fileID: 8476588010910221000}
     color: {r: 1, g: 0.039682537, b: 0, a: 0}
   - TileType: 5
     Tile: {fileID: 8476588010910221000}
-    color: {r: 0.21844877, g: 0.7660377, b: 0.16621563, a: 0}
+    color: {r: 0.36078712, g: 0.83396226, b: 0.31312913, a: 0}
   - TileType: 6
     Tile: {fileID: 8476588010910221000}
-    color: {r: 0.3735848, g: 0.18384637, b: 0.05004627, a: 0}
+    color: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 0}
 --- !u!65 &9214369024972718229
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -352,7 +352,7 @@ PrefabInstance:
     - target: {fileID: 9000355895418085483, guid: 183647a59fc7c5d4f8bf21a1b78a82d1,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

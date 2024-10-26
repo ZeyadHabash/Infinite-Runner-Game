@@ -14,6 +14,7 @@ namespace InfiniteRunner
         [Header("TMP")]
         [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private TMP_Text _fuelText;
+        [SerializeField] private TMP_Text _playerSpeedText;
         [SerializeField] private TMP_Text _finalScoreText;
 
         [Header("Canvas")]
@@ -32,10 +33,11 @@ namespace InfiniteRunner
         private int _currentScore;
         private int _currentFuel;
 
-        private int _fuelDecreaseRate = 1;
         private int _scoreIncreaseRate = 1;
 
         [Header("SOAP")]
+        [SerializeField] private IntVariable _fuelDecreaseRate;
+        [SerializeField] private StringVariable _playerSpeed;
         [SerializeField] private BoolVariable _isGameOver;
         [SerializeField] private BoolVariable _isPaused;
 
@@ -57,8 +59,19 @@ namespace InfiniteRunner
 
         #region MonoBehaviour Methods
 
+        private void OnEnable()
+        {
+            _playerSpeed.OnValueChanged += OnPlayerSpeedChanged;
+        }
+
+        private void OnDisable()
+        {
+            _playerSpeed.OnValueChanged -= OnPlayerSpeedChanged;
+        }
+
         private IEnumerator Start()
         {
+            _fuelDecreaseRate.Value = 1;
             // Initialize the score and fuel
             ResetFuel();
             ResetScore();
@@ -66,6 +79,7 @@ namespace InfiniteRunner
             // Initialize the score and fuel text
             _scoreText.SetText(_scoreText.text, _initialScore);
             _fuelText.SetText(_fuelText.text, _initialFuel);
+            _playerSpeedText.SetText($"Speed: {_playerSpeed.Value}");
 
             // Initialize selected buttons in event system
             EventSystem.current.SetSelectedGameObject(null);
@@ -146,6 +160,12 @@ namespace InfiniteRunner
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 
+        public void ResetFuel()
+        {
+            _currentFuel = _initialFuel;
+            _fuelText.SetText($"Fuel: {_currentFuel}");
+        }
+
         #endregion
 
 
@@ -158,10 +178,9 @@ namespace InfiniteRunner
             _scoreText.SetText($"Score: {_currentScore}");
         }
 
-        private void ResetFuel()
+        private void OnPlayerSpeedChanged(string speed)
         {
-            _currentFuel = _initialFuel;
-            _fuelText.SetText($"Fuel: {_currentFuel}");
+            _playerSpeedText.SetText($"Speed: {speed}");
         }
 
         #endregion
