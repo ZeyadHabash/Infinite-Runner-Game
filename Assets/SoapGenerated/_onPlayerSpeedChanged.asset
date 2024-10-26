@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: _onPlayerSpeedChanged
   m_EditorClassIdentifier: 
   CategoryIndex: 0
-  _debugLogEnabled: 1
+  _debugLogEnabled: 0

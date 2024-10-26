@@ -37,6 +37,17 @@ namespace InfiniteRunner
         [SerializeField] private int _defaultFuelRate = 1;
         [SerializeField] private int _burnFuelRate = 10;
 
+        [Header("Sound Clips")]
+        [SerializeField] private float _volume = 0.5f;
+        [SerializeField] private AudioClip[] _invalidClips;
+        [SerializeField] private AudioClip _obstacleClip;
+        [SerializeField] private AudioClip _fallClip;
+        [SerializeField] private AudioClip[] _boostClips;
+        [SerializeField] private AudioClip[] _stickyClips;
+        [SerializeField] private AudioClip _burningClip;
+        [SerializeField] private AudioClip _suppliesClip;
+
+
         private Rigidbody _rigidBody;
         private LayerMask _groundLayer;
         private Collider _playerCollider;
@@ -143,12 +154,6 @@ namespace InfiniteRunner
                 if (transform.position == targetPosition)
                     _isMoving = false;
             }
-
-            // // Check if player fell off the platform
-            // if (transform.position.y < -5)
-            // {
-            //     _onPlayerDeath.Raise(true);
-            // }
         }
 
         private void OnCollisionEnter(Collision other)
@@ -156,9 +161,15 @@ namespace InfiniteRunner
             switch (other.gameObject.tag)
             {
                 case "Obstacle":
+                    AudioManager.Instance.PlaySoundFXClip(_obstacleClip, other.gameObject.transform, _volume);
+                    _onPlayerDeath.Raise();
+                    break;
+                case "Fall":
+                    AudioManager.Instance.PlaySoundFXClip(_fallClip, other.gameObject.transform, _volume);
                     _onPlayerDeath.Raise();
                     break;
                 case "Boost":
+                    AudioManager.Instance.PlaySoundFXClip(_boostClips[UnityEngine.Random.Range(0, _boostClips.Length)], other.gameObject.transform, _volume);
                     if (_playerSpeed.Value.Equals("Normal"))
                     {
                         _onPlayerSpeedChanged.Raise();
@@ -167,6 +178,7 @@ namespace InfiniteRunner
                     }
                     break;
                 case "Sticky":
+                    AudioManager.Instance.PlaySoundFXClip(_stickyClips[UnityEngine.Random.Range(0, _stickyClips.Length)], other.gameObject.transform, _volume * 1.5f);
                     if (_playerSpeed.Value.Equals("High"))
                     {
                         _onPlayerSpeedChanged.Raise();
@@ -175,9 +187,11 @@ namespace InfiniteRunner
                     }
                     break;
                 case "Burning":
+                    AudioManager.Instance.PlaySoundFXClip(_burningClip, other.gameObject.transform, _volume);
                     _fuelDecreaseRate.Value = _burnFuelRate;
                     break;
                 case "Supplies":
+                    AudioManager.Instance.PlaySoundFXClip(_suppliesClip, other.gameObject.transform, _volume);
                     _onEnterSupplies.Raise();
                     break;
             }
@@ -210,6 +224,8 @@ namespace InfiniteRunner
         #region Private Methods
         private void OnMove(InputAction.CallbackContext context)
         {
+            if (_isPaused || _isGameOver)
+                return;
             // Get the input value
             float moveValue = context.ReadValue<float>();
             if (moveValue < 0) // Move Left
@@ -224,6 +240,8 @@ namespace InfiniteRunner
 
         private void OnJump(InputAction.CallbackContext context)
         {
+            if (_isPaused || _isGameOver)
+                return;
             float jumpValue = context.ReadValue<float>();
             if (jumpValue > 0) // Jump
                 Jump();
@@ -253,7 +271,10 @@ namespace InfiniteRunner
         {
             // Check if the player is already at the left position
             if (_playerPosition == PlayerPosition.Left)
+            {
+                AudioManager.Instance.PlaySoundFXClip(_invalidClips[UnityEngine.Random.Range(0, _invalidClips.Length)], transform, _volume);
                 return;
+            }
 
             if (_playerPosition == PlayerPosition.Middle)
                 _playerPosition = PlayerPosition.Left;
@@ -266,7 +287,10 @@ namespace InfiniteRunner
         private void MoveRight()
         {
             if (_playerPosition == PlayerPosition.Right)
+            {
+                AudioManager.Instance.PlaySoundFXClip(_invalidClips[UnityEngine.Random.Range(0, _invalidClips.Length)], transform, _volume);
                 return;
+            }
 
             if (_playerPosition == PlayerPosition.Middle)
                 _playerPosition = PlayerPosition.Right;
@@ -279,7 +303,10 @@ namespace InfiniteRunner
         private void Jump()
         {
             if (!IsGrounded())
+            {
+                AudioManager.Instance.PlaySoundFXClip(_invalidClips[UnityEngine.Random.Range(0, _invalidClips.Length)], transform, _volume);
                 return;
+            }
 
             // Add force to the player rigidbody
             _rigidBody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);

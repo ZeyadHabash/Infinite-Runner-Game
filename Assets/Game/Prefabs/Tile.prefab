@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 380629580062167956}
   m_Layer: 0
   m_Name: FallDetector
-  m_TagString: Obstacle
+  m_TagString: Fall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
