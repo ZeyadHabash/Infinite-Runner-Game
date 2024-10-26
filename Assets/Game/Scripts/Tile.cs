@@ -1,48 +1,99 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GDK;
+using System;
 
-public class Tile : MonoBehaviour
+namespace InfiniteRunner
 {
-    #region Fields
-    [SerializeField] private TileType _tileType;
-    [SerializeField] private int _destroyDelay = 2;
-    private Rigidbody _rigidbody;
-    #endregion
+    public class Tile : PoolableMonoBehaviour
+    {
+        [SerializeField] private TileTypeConfig[] _tileTypeConfigs;
+        private BoxCollider _collider;
+        private Transform _transform;
+        public enum TileType
+        {
+            Normal,
+            Empty,
+            Obstacle,
+            Supplies,
+            Burning,
+            Boost,
+            Sticky
+        }
 
-    #region MonoBehaviour Methods
-    private void Awake()
-    {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-    #endregion
+        [System.Serializable]
+        public class TileTypeConfig
+        {
+            public TileType TileType;
+            public GameObject Tile;
+            public Color color;
+        }
 
-    #region Public Methods
-    public void InitializeTile(TileType tileType)
-    {
-        SetTileType(tileType);
-    }
-    public void DestroyTile()
-    {
-        StartCoroutine(DestroyTileRoutine());
-    }
-    public void OnTileEntered()
-    {
-        _tileType.OnTileEntered();
-    }
-    #endregion
+        #region Fields
 
-    #region Private Methods
-    private IEnumerator DestroyTileRoutine()
-    {
-        yield return new WaitForSeconds(_destroyDelay);
-        Destroy(gameObject);
-    }
-    private void SetTileType(TileType tileType)
-    {
-        _tileType = tileType;
-        GetComponent<Renderer>().material.color = tileType.TileColor;
-    }
-    #endregion
+        #endregion
 
+        #region MonoBehaviour Methods
+
+        private void Awake()
+        {
+            _collider = gameObject.GetComponent<BoxCollider>();
+            _transform = transform;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                Release();
+            }
+        }
+        #endregion
+
+        #region Public Methods
+
+        public void Configure(TileConfigSO config, Vector3 position)
+        {
+            _transform.position = position; // set the position of the tile
+            foreach (TileType tileType in config.TileTypes)
+            {
+                foreach (TileTypeConfig tileTypeConfig in _tileTypeConfigs)
+                {
+                    if (tileType == tileTypeConfig.TileType)
+                    {
+                        tileTypeConfig.Tile.SetActive(true); // activate the tile
+
+                        Renderer tileRenderer = tileTypeConfig.Tile.GetComponent<Renderer>(); // get the renderer of the tile
+                        if (tileRenderer != null) // if the renderer is not null
+                            tileRenderer.material.color = tileTypeConfig.color; // set the color of the tile
+                    }
+                }
+            }
+
+        }
+
+
+
+        public override void OnObjectPoolReturn()
+        {
+            // Deactivate all tiles when returning to pool
+            foreach (TileTypeConfig tileTypeConfig in _tileTypeConfigs)
+            {
+                if (tileTypeConfig.Tile != null)
+                {
+                    tileTypeConfig.Tile.SetActive(false);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+
+
+        #endregion
+
+    }
 }
