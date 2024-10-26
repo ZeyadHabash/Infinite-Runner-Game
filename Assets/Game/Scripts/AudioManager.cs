@@ -9,7 +9,9 @@ namespace InfiniteRunner
     {
         #region Fields
         [SerializeField] private AudioSource _audioSourcePrefab;
-        [SerializeField] private AudioClip _backgroundMusic;
+        [SerializeField] private AudioClip[] _backgroundMusics;
+        private AudioClip _backgroundMusic;
+        private int _backgroundMusicIndex = 0;
         [SerializeField] private float _backgroundMusicVolume = 1;
         private AudioSource _backgroundMusicAudioSource;
 
@@ -33,6 +35,7 @@ namespace InfiniteRunner
         #region MonoBehaviour Methods
         private void Start()
         {
+            _backgroundMusic = _backgroundMusics[_backgroundMusicIndex];
             if (!_isMuted)
                 _backgroundMusicAudioSource = PlayBackgroundMusic(_backgroundMusic, transform, _backgroundMusicVolume);
         }
@@ -106,6 +109,8 @@ namespace InfiniteRunner
         }
         public void ResumeBackgroundMusic()
         {
+            if (_isMuted)
+                return;
             _backgroundMusicAudioSource.Play();
         }
         public void StopBackgroundMusic()
@@ -114,14 +119,27 @@ namespace InfiniteRunner
         }
         public void StartBackgroundMusic()
         {
+            if (_isMuted)
+                return;
+            if (_backgroundMusicAudioSource.isPlaying)
+                return;
+            if (_backgroundMusicAudioSource == null)
+            {
+                _backgroundMusicAudioSource = PlayBackgroundMusic(_backgroundMusic, transform, _backgroundMusicVolume);
+                return;
+            }
             _backgroundMusicAudioSource.Play();
         }
         public void SetBackgroundMusicVolume(float volume)
         {
+            if (_isMuted)
+                return;
             _backgroundMusicAudioSource.volume = volume;
         }
         public void ResetBackgroundMusicVolume()
         {
+            if (_isMuted)
+                return;
             _backgroundMusicAudioSource.volume = _backgroundMusicVolume;
         }
 
@@ -143,6 +161,23 @@ namespace InfiniteRunner
             {
                 audioSource.Stop();
             }
+        }
+
+        public void SwitchBackgroundMusic()
+        {
+            if (_isMuted)
+                return;
+            if (_backgroundMusicIndex < _backgroundMusics.Length - 1)
+            {
+                _backgroundMusicIndex++;
+            }
+            else
+            {
+                _backgroundMusicIndex = 0;
+            }
+            _backgroundMusic = _backgroundMusics[_backgroundMusicIndex];
+            StopBackgroundMusic();
+            _backgroundMusicAudioSource = PlayBackgroundMusic(_backgroundMusic, transform, _backgroundMusicVolume);
         }
         #endregion
 

@@ -17,6 +17,6 @@ MonoBehaviour:
   _saveGuid: 0
   _value: 0
   _debugLogEnabled: 0
-  _saved: 0
+  _saved: 1
   _defaultValue: 0
   _resetOn: 1

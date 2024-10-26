@@ -112,6 +112,7 @@ namespace InfiniteRunner
         {
             if (_isGameOver)
                 return;
+            AudioManager.Instance.SwitchBackgroundMusic();
             if (_isPaused)
             {
                 Time.timeScale = 1;
@@ -141,6 +142,7 @@ namespace InfiniteRunner
 
             EventSystem.current.SetSelectedGameObject(_gameOverFirstSelectedButton);
             _finalScoreText.SetText(_finalScoreText.text, _currentScore);
+            AudioManager.Instance.SwitchBackgroundMusic();
             AudioManager.Instance.SetBackgroundMusicVolume(0.1f);
         }
 

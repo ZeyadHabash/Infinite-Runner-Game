@@ -7710,7 +7710,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audioSourcePrefab: {fileID: 3371851411143163481, guid: 2b829ee5d79eede42954da1488e696c9,
     type: 3}
-  _backgroundMusic: {fileID: 8300000, guid: daeae824209b18c48bbab503afb9f54b, type: 3}
+  _backgroundMusics:
+  - {fileID: 8300000, guid: daeae824209b18c48bbab503afb9f54b, type: 3}
+  - {fileID: 8300000, guid: a3769aed74ad517458481500ec59bdff, type: 3}
   _backgroundMusicVolume: 0.3
   _isMuted: {fileID: 11400000, guid: 8b0c6f42dd5950e4ba0661eabe5073bc, type: 2}
 --- !u!1 &1764368448
