@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Obvious.Soap;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace InfiniteRunner
@@ -36,9 +38,12 @@ namespace InfiniteRunner
         private PlayerInput _playerInput;
         private InputAction _moveAction;
         private InputAction _jumpAction;
+        private InputAction _pauseAction;
 
         private bool _isMoving = false;
         private PlayerPosition _playerPosition = PlayerPosition.Middle;
+        private bool _isGameOver = false;
+        private bool _isPaused = false;
 
         #endregion
 
@@ -47,7 +52,6 @@ namespace InfiniteRunner
         #endregion
 
         #region Events/Delegates
-
         #endregion
 
         #region MonoBehaviour Methods
@@ -61,18 +65,28 @@ namespace InfiniteRunner
             // Get the input actions
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
+            _pauseAction = _playerInput.actions["Pause"];
+
+            _moveAction.Enable();
+            _jumpAction.Enable();
+            _pauseAction.Enable();
+
+            _isGameOver = false;
+            _isPaused = false;
         }
 
         private void OnEnable()
         {
             _moveAction.performed += OnMove;
             _jumpAction.performed += OnJump;
+            _pauseAction.performed += OnPause;
         }
 
         private void OnDisable()
         {
             _moveAction.performed -= OnMove;
             _jumpAction.performed -= OnJump;
+            _pauseAction.performed -= OnPause;
         }
 
         private void Start()
@@ -108,11 +122,33 @@ namespace InfiniteRunner
                 if (transform.position == targetPosition)
                     _isMoving = false;
             }
+
+            // Check if player fell off the platform
+            if (transform.position.y < -5)
+            {
+                OnGameOver();
+            }
+        }
+        private void LateUpdate()
+        {
+            if (Time.timeScale == 0)
+            {
+                _jumpAction.Disable();
+                _moveAction.Disable();
+            }
+            else
+            {
+                _jumpAction.Enable();
+                _moveAction.Enable();
+            }
         }
 
-        private void FixedUpdate()
+        private void OnCollisionEnter(Collision other)
         {
-
+            if (other.gameObject.CompareTag("Obstacle"))
+            {
+                OnGameOver();
+            }
         }
 
         private void OnDrawGizmos()
@@ -151,6 +187,20 @@ namespace InfiniteRunner
             float jumpValue = context.ReadValue<float>();
             if (jumpValue > 0) // Jump
                 Jump();
+        }
+
+        private void OnPause(InputAction.CallbackContext context)
+        {
+            // Pause the game
+            GameManager.Instance.PauseGame();
+        }
+
+        private void OnGameOver()
+        {
+            if (_isGameOver)
+                return;
+            GameManager.Instance.GameOver();
+            _isGameOver = true;
         }
 
         private void MoveLeft()

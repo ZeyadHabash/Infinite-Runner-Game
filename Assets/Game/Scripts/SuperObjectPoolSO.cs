@@ -19,6 +19,10 @@ namespace GDK
 
         private void OnEnable()
         {
+            Initialize();
+        }
+        public void Initialize()
+        {
             objectPool = new ObjectPool<PoolableMonoBehaviour>(
                 CreatePooledObject,
                 OnTakeFromPool,

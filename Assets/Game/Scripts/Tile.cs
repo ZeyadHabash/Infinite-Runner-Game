@@ -9,7 +9,6 @@ namespace InfiniteRunner
     public class Tile : PoolableMonoBehaviour
     {
         [SerializeField] private TileTypeConfig[] _tileTypeConfigs;
-        private BoxCollider _collider;
         private Transform _transform;
         public enum TileType
         {
@@ -38,7 +37,6 @@ namespace InfiniteRunner
 
         private void Awake()
         {
-            _collider = gameObject.GetComponent<BoxCollider>();
             _transform = transform;
         }
 

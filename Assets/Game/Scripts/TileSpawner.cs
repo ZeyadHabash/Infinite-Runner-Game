@@ -38,6 +38,7 @@ namespace InfiniteRunner
         #region MonoBehaviour Methods
         private void Start()
         {
+            _tilePool.Initialize(); // Initialize the tile pool
             _spawnPosition = _tilePool.defaultSpawnLocation;
 
             // Spawn initial tiles (no random tiles)
