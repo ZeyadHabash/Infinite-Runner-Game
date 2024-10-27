@@ -161,15 +161,15 @@ namespace InfiniteRunner
             switch (other.gameObject.tag)
             {
                 case "Obstacle":
-                    AudioManager.Instance.PlaySoundFXClip(_obstacleClip, other.gameObject.transform, _volume);
+                    AudioManager.Instance.PlaySoundFXClip(_obstacleClip, other.gameObject.transform, _volume * 0.75f);
                     _onPlayerDeath.Raise();
                     break;
                 case "Fall":
-                    AudioManager.Instance.PlaySoundFXClip(_fallClip, other.gameObject.transform, _volume);
+                    AudioManager.Instance.PlaySoundFXClip(_fallClip, other.gameObject.transform, _volume * 0.75f);
                     _onPlayerDeath.Raise();
                     break;
                 case "Boost":
-                    AudioManager.Instance.PlaySoundFXClip(_boostClips[UnityEngine.Random.Range(0, _boostClips.Length)], other.gameObject.transform, _volume);
+                    AudioManager.Instance.PlaySoundFXClip(_boostClips[UnityEngine.Random.Range(0, _boostClips.Length)], other.gameObject.transform, _volume * 1.25f);
                     if (_playerSpeed.Value.Equals("Normal"))
                     {
                         _onPlayerSpeedChanged.Raise();
@@ -187,11 +187,11 @@ namespace InfiniteRunner
                     }
                     break;
                 case "Burning":
-                    AudioManager.Instance.PlaySoundFXClip(_burningClip, other.gameObject.transform, _volume);
+                    AudioManager.Instance.PlaySoundFXClip(_burningClip, other.gameObject.transform, _volume * 0.75f);
                     _fuelDecreaseRate.Value = _burnFuelRate;
                     break;
                 case "Supplies":
-                    AudioManager.Instance.PlaySoundFXClip(_suppliesClip, other.gameObject.transform, _volume);
+                    AudioManager.Instance.PlaySoundFXClip(_suppliesClip, other.gameObject.transform, _volume * 0.75f);
                     _onEnterSupplies.Raise();
                     break;
             }

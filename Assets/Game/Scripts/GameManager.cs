@@ -119,7 +119,6 @@ namespace InfiniteRunner
                 _pauseCanvas.gameObject.SetActive(false);
                 _isPaused.Value = false;
                 EventSystem.current.SetSelectedGameObject(null);
-                AudioManager.Instance.ResetBackgroundMusicVolume();
             }
             else
             {
@@ -127,7 +126,6 @@ namespace InfiniteRunner
                 _pauseCanvas.gameObject.SetActive(true);
                 _isPaused.Value = true;
                 EventSystem.current.SetSelectedGameObject(_pauseFirstSelectedButton);
-                AudioManager.Instance.SetBackgroundMusicVolume(0.1f);
             }
         }
         public void GameOver()
@@ -143,7 +141,6 @@ namespace InfiniteRunner
             EventSystem.current.SetSelectedGameObject(_gameOverFirstSelectedButton);
             _finalScoreText.SetText(_finalScoreText.text, _currentScore);
             AudioManager.Instance.SwitchBackgroundMusic();
-            AudioManager.Instance.SetBackgroundMusicVolume(0.1f);
         }
 
         public void IncreaseScore(int score)

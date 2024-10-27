@@ -54,7 +54,7 @@ namespace InfiniteRunner
 
         #region Public Methods
 
-        public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume = 1, float length = 1)
+        public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume = 1, float length = 2)
         {
             if (_isMuted)
             {
@@ -73,7 +73,7 @@ namespace InfiniteRunner
             audioSource.Play();
 
             // Get the length of the audio clip
-            float audioClipLength = audioClip.length > 1 ? length : audioClip.length;
+            float audioClipLength = audioClip.length > length ? length : audioClip.length;
 
             // Destroy the GameObject after the length of the audio clip
             Destroy(audioSource.gameObject, audioClipLength);
