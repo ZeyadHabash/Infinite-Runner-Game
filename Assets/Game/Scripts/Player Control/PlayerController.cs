@@ -57,6 +57,12 @@ namespace InfiniteRunner
         private InputAction _jumpAction;
         private InputAction _pauseAction;
 
+        // Cheats 
+        private InputAction _invincibleAction;
+        private InputAction _slowDownAction;
+        private InputAction _refillFuelAction;
+
+        private bool _isInvincible = false;
         private bool _isMoving = false;
         private PlayerPosition _playerPosition = PlayerPosition.Middle;
 
@@ -123,6 +129,7 @@ namespace InfiniteRunner
         {
             // Set the ground layer
             _groundLayer = LayerMask.GetMask("Ground");
+            _playerSpeed.Value = "Normal";
         }
 
         private void Update()
@@ -265,6 +272,33 @@ namespace InfiniteRunner
                 _moveAction.Enable();
                 _jumpAction.Enable();
             }
+        }
+
+        private void OnInvincible(InputAction.CallbackContext context)
+        {
+            if (_isPaused || _isGameOver)
+                return;
+            _isInvincible = !_isInvincible;
+        }
+
+        private void OnSlowDown(InputAction.CallbackContext context)
+        {
+            if (_isPaused || _isGameOver)
+                return;
+            // if (_playerSpeed.Value.Equals("High"))
+            // {
+            //     _onPlayerSpeedChanged.Raise();
+            //     _playerSpeed.Value = "Normal";
+            //     _speed /= 2;
+            // }
+            // _speed /= 2;
+        }
+
+        private void OnRefillFuel(InputAction.CallbackContext context)
+        {
+            if (_isPaused || _isGameOver)
+                return;
+            // _fuelDecreaseRate.Value = _defaultFuelRate;
         }
 
         private void MoveLeft()

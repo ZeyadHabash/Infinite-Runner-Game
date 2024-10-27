@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 namespace InfiniteRunner
 {
     public class MainMenuManager : MonoBehaviour
     {
         #region Fields
-
+        [SerializeField] private GameObject _playButton;
         #endregion
 
 
@@ -25,7 +27,10 @@ namespace InfiniteRunner
 
 
         #region MonoBehaviour Methods
-
+        private void Start()
+        {
+            EventSystem.current.SetSelectedGameObject(_playButton);
+        }
         #endregion
 
 
@@ -33,14 +38,17 @@ namespace InfiniteRunner
         #region Public Methods
         public void StartGame()
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("SampleScene");
         }
         public void QuitGame()
         {
             Application.Quit();
         }
+        public void SetFirstSelectedButton(GameObject button)
+        {
+            EventSystem.current.SetSelectedGameObject(button);
+        }
         #endregion
-
 
 
         #region Private Methods

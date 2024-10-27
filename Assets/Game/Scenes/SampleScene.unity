@@ -7713,7 +7713,7 @@ MonoBehaviour:
   _backgroundMusics:
   - {fileID: 8300000, guid: daeae824209b18c48bbab503afb9f54b, type: 3}
   - {fileID: 8300000, guid: a3769aed74ad517458481500ec59bdff, type: 3}
-  _backgroundMusicVolume: 0.3
+  _backgroundMusicVolume: 0.2
   _isMuted: {fileID: 11400000, guid: 8b0c6f42dd5950e4ba0661eabe5073bc, type: 2}
 --- !u!1 &1764368448
 GameObject:
@@ -8089,7 +8089,7 @@ MonoBehaviour:
   _middlePositionX: 0
   _defaultFuelRate: 1
   _burnFuelRate: 10
-  _volume: 0.5
+  _volume: 0.35
   _invalidClips:
   - {fileID: 8300000, guid: ec45a5eb2d22c4848adc8cdf51f10faf, type: 3}
   - {fileID: 8300000, guid: fb872feede7943246906a847563c224d, type: 3}
@@ -8102,7 +8102,7 @@ MonoBehaviour:
   _stickyClips:
   - {fileID: 8300000, guid: 737617414aa20384b975ec73a0406027, type: 3}
   - {fileID: 8300000, guid: b187b808e7b70674098c217db1f3c4ef, type: 3}
-  _burningClip: {fileID: 8300000, guid: 76ba3df9c8d0cd44aa1fbb80576bc75e, type: 3}
+  _burningClip: {fileID: 8300000, guid: 97a7878349241314dbe491fc36657735, type: 3}
   _suppliesClip: {fileID: 8300000, guid: 1d23098795784a64cb3fe80229a45eba, type: 3}
   _isGameOver: {fileID: 11400000, guid: db962b5c886688544aec66fb81caea50, type: 2}
   _isPaused: {fileID: 11400000, guid: 3b311f88b78e25a40894eb5966786e77, type: 2}

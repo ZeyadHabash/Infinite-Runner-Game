@@ -121,13 +121,13 @@ namespace InfiniteRunner
         {
             if (_isMuted)
                 return;
-            if (_backgroundMusicAudioSource.isPlaying)
-                return;
             if (_backgroundMusicAudioSource == null)
             {
                 _backgroundMusicAudioSource = PlayBackgroundMusic(_backgroundMusic, transform, _backgroundMusicVolume);
                 return;
             }
+            if (_backgroundMusicAudioSource.isPlaying)
+                return;
             _backgroundMusicAudioSource.Play();
         }
         public void SetBackgroundMusicVolume(float volume)
