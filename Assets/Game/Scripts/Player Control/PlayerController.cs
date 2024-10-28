@@ -21,7 +21,8 @@ namespace InfiniteRunner
         #region Fields
 
         [Header("Speed Configs")]
-        [SerializeField] private float _speed = 10f;
+        [SerializeField] private float _initialSpeed = 15f;
+        [SerializeField] private float _boostSpeedMultiplier = 1.5f;
         [SerializeField] private float _sideSpeed = 20f;
         [SerializeField] private float _jumpForce = 10f;
 
@@ -51,6 +52,7 @@ namespace InfiniteRunner
         private Rigidbody _rigidBody;
         private LayerMask _groundLayer;
         private Collider _playerCollider;
+        private Renderer _playerRenderer;
 
         private PlayerInput _playerInput;
         private InputAction _moveAction;
@@ -63,7 +65,11 @@ namespace InfiniteRunner
         private InputAction _refillFuelAction;
 
         private bool _isInvincible = false;
+        private Coroutine _rainbowCoroutine;
+
         private bool _isMoving = false;
+        private Vector3 _lastPosition;
+        private float _speed;
         private PlayerPosition _playerPosition = PlayerPosition.Middle;
 
         [Header("SOAP Variables")]
@@ -94,19 +100,21 @@ namespace InfiniteRunner
             _rigidBody = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<Collider>();
             _playerInput = GetComponent<PlayerInput>();
+            _playerRenderer = GetComponent<Renderer>();
 
             // Get the input actions
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
             _pauseAction = _playerInput.actions["Pause"];
+            _invincibleAction = _playerInput.actions["Invincibility"];
+            _slowDownAction = _playerInput.actions["Slow"];
+            _refillFuelAction = _playerInput.actions["Refill"];
 
             // Enable the input actions
             _moveAction.Enable();
             _jumpAction.Enable();
             _pauseAction.Enable();
-
-            // Set the player speed
-            _playerSpeed.Value = "Normal";
+            _invincibleAction.Enable();
         }
 
         private void OnEnable()
@@ -115,6 +123,7 @@ namespace InfiniteRunner
             _jumpAction.performed += OnJump;
             _pauseAction.performed += OnPause;
             _isPaused.OnValueChanged += OnGamePaused;
+            _invincibleAction.performed += OnInvincible;
         }
 
         private void OnDisable()
@@ -123,6 +132,7 @@ namespace InfiniteRunner
             _jumpAction.performed -= OnJump;
             _pauseAction.performed -= OnPause;
             _isPaused.OnValueChanged -= OnGamePaused;
+            _invincibleAction.performed -= OnInvincible;
         }
 
         private void Start()
@@ -130,6 +140,9 @@ namespace InfiniteRunner
             // Set the ground layer
             _groundLayer = LayerMask.GetMask("Ground");
             _playerSpeed.Value = "Normal";
+            _isInvincible = false;
+            _speed = _initialSpeed;
+            _lastPosition = transform.position;
         }
 
         private void Update()
@@ -138,6 +151,11 @@ namespace InfiniteRunner
                 return;
             // Move the player forward
             transform.position += Vector3.forward * _speed * Time.deltaTime;
+
+            // Increase score based on distance travelled
+            float distanceTravelled = transform.position.z - _lastPosition.z;
+            GameManager.Instance.IncreaseScore(distanceTravelled / 10);
+            _lastPosition = transform.position;
 
             // Smoothly move the player to the target position
             if (_isMoving)
@@ -169,6 +187,7 @@ namespace InfiniteRunner
             {
                 case "Obstacle":
                     AudioManager.Instance.PlaySoundFXClip(_obstacleClip, other.gameObject.transform, _volume * 0.75f);
+                    // if (!_isInvincible)
                     _onPlayerDeath.Raise();
                     break;
                 case "Fall":
@@ -176,12 +195,13 @@ namespace InfiniteRunner
                     _onPlayerDeath.Raise();
                     break;
                 case "Boost":
-                    AudioManager.Instance.PlaySoundFXClip(_boostClips[UnityEngine.Random.Range(0, _boostClips.Length)], other.gameObject.transform, _volume * 1.25f);
+                    AudioManager.Instance.PlaySoundFXClip(_boostClips[UnityEngine.Random.Range(0, _boostClips.Length)], other.gameObject.transform, _volume * 2f);
+                    _speed *= _boostSpeedMultiplier;
                     if (_playerSpeed.Value.Equals("Normal"))
                     {
                         _onPlayerSpeedChanged.Raise();
                         _playerSpeed.Value = "High";
-                        _speed *= 2;
+                        _sideSpeed *= 2;
                     }
                     break;
                 case "Sticky":
@@ -190,8 +210,9 @@ namespace InfiniteRunner
                     {
                         _onPlayerSpeedChanged.Raise();
                         _playerSpeed.Value = "Normal";
-                        _speed /= 2;
+                        _sideSpeed /= 2;
                     }
+                    _speed = _initialSpeed;
                     break;
                 case "Burning":
                     AudioManager.Instance.PlaySoundFXClip(_burningClip, other.gameObject.transform, _volume * 0.75f);
@@ -278,7 +299,11 @@ namespace InfiniteRunner
         {
             if (_isPaused || _isGameOver)
                 return;
-            _isInvincible = !_isInvincible;
+
+            if (!_isInvincible)
+                StartInvincibility();
+            else
+                StopInvincibility();
         }
 
         private void OnSlowDown(InputAction.CallbackContext context)
@@ -350,6 +375,46 @@ namespace InfiniteRunner
         {
             // using a raycast to check if the player is grounded
             return Physics.Raycast(transform.position, Vector3.down, _groundCheckDistance, _groundLayer);
+        }
+
+
+        private void StartInvincibility()
+        {
+            _isInvincible = true;
+            if (_rainbowCoroutine != null)
+            {
+                StopCoroutine(_rainbowCoroutine);
+            }
+            _rainbowCoroutine = StartCoroutine(RainbowEffect());
+        }
+
+        private void StopInvincibility()
+        {
+            _isInvincible = false;
+            if (_rainbowCoroutine != null)
+            {
+                StopCoroutine(_rainbowCoroutine);
+                _rainbowCoroutine = null;
+            }
+            _playerRenderer.material.color = Color.white; // Reset to original color
+        }
+        private IEnumerator RainbowEffect()
+        {
+            while (_isInvincible)
+            {
+                _playerRenderer.material.color = Color.Lerp(Color.red, Color.yellow, Mathf.PingPong(Time.time, 1));
+                yield return new WaitForSeconds(0.1f);
+                _playerRenderer.material.color = Color.Lerp(Color.yellow, Color.green, Mathf.PingPong(Time.time, 1));
+                yield return new WaitForSeconds(0.1f);
+                _playerRenderer.material.color = Color.Lerp(Color.green, Color.cyan, Mathf.PingPong(Time.time, 1));
+                yield return new WaitForSeconds(0.1f);
+                _playerRenderer.material.color = Color.Lerp(Color.cyan, Color.blue, Mathf.PingPong(Time.time, 1));
+                yield return new WaitForSeconds(0.1f);
+                _playerRenderer.material.color = Color.Lerp(Color.blue, Color.magenta, Mathf.PingPong(Time.time, 1));
+                yield return new WaitForSeconds(0.1f);
+                _playerRenderer.material.color = Color.Lerp(Color.magenta, Color.red, Mathf.PingPong(Time.time, 1));
+                yield return new WaitForSeconds(0.1f);
+            }
         }
         #endregion
     }

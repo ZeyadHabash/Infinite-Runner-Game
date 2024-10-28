@@ -29,10 +29,11 @@ namespace InfiniteRunner
 
         [Header("Resources")]
         [SerializeField] private int _initialScore = 0;
-        [SerializeField] private int _initialFuel = 50;
-        private int _currentScore;
-        private int _currentFuel;
+        [SerializeField] private float _initialFuel = 50;
+        private float _currentScore;
+        private float _currentFuel;
 
+        public float Score => _currentScore;
         private int _scoreIncreaseRate = 1;
 
         [Header("SOAP")]
@@ -40,6 +41,7 @@ namespace InfiniteRunner
         [SerializeField] private StringVariable _playerSpeed;
         [SerializeField] private BoolVariable _isGameOver;
         [SerializeField] private BoolVariable _isPaused;
+        [SerializeField] private ScriptableEventNoParam _onGameOver;
 
         #endregion
 
@@ -69,7 +71,7 @@ namespace InfiniteRunner
             _playerSpeed.OnValueChanged -= OnPlayerSpeedChanged;
         }
 
-        private IEnumerator Start()
+        private void Start()
         {
             _fuelDecreaseRate.Value = 1;
             // Initialize the score and fuel
@@ -87,21 +89,19 @@ namespace InfiniteRunner
             // Reset the isGameOver and isPaused variables
             _isPaused.Value = false;
             _isGameOver.Value = false;
-
-            while (!_isGameOver)
-            {
-                yield return new WaitForSeconds(1);
-                if (_isPaused || _isGameOver)
-                    continue;
-                IncreaseScore(_scoreIncreaseRate);
-                DecreaseFuel(_fuelDecreaseRate);
-                if (_currentFuel <= 0)
-                {
-                    GameOver();
-                }
-            }
         }
 
+        private void Update()
+        {
+            if (_isPaused || _isGameOver)
+                return;
+            IncreaseScore(_scoreIncreaseRate * Time.deltaTime);
+            DecreaseFuel(_fuelDecreaseRate * Time.deltaTime);
+            if (_currentFuel <= 0)
+            {
+                GameOver();
+            }
+        }
         #endregion
 
 
@@ -141,24 +141,27 @@ namespace InfiniteRunner
             EventSystem.current.SetSelectedGameObject(_gameOverFirstSelectedButton);
             _finalScoreText.SetText(_finalScoreText.text, _currentScore);
             AudioManager.Instance.SwitchBackgroundMusic();
+            _onGameOver.Raise();
         }
 
-        public void IncreaseScore(int score)
+        public void IncreaseScore(float score)
         {
             _currentScore += score;
-            _scoreText.SetText($"Score: {_currentScore}");
+            _scoreText.SetText($"Score: {_currentScore:F0}");
         }
 
-        public void DecreaseFuel(int fuel)
+        public void DecreaseFuel(float fuel)
         {
             _currentFuel -= fuel;
-            _fuelText.SetText($"Fuel: {_currentFuel}");
+            _fuelText.SetText($"Fuel: {_currentFuel:F0}");
         }
 
         public void RestartGame()
         {
             Time.timeScale = 1;
             _isGameOver.Value = false;
+            ResetFuel();
+            ResetScore();
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 

@@ -2,21 +2,15 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
-  m_ObjectHideFlags: 32
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb51723e892a404a87b22018981eb5d, type: 3}
-  m_Name: _playerSpeed
+  m_Script: {fileID: 11500000, guid: a49b7e678b3ebb7418adb84806d24646, type: 3}
+  m_Name: _onGameOver
   m_EditorClassIdentifier: 
   CategoryIndex: 0
-  _guid: c24bb4bd1bd662240b3ad9580a1cb376
-  _saveGuid: 0
-  _value: 
   _debugLogEnabled: 0
-  _saved: 0
-  _defaultValue: 
-  _resetOn: 0
