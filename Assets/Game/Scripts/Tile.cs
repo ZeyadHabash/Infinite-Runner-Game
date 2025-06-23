@@ -65,6 +65,9 @@ namespace InfiniteRunner
                         Renderer tileRenderer = tileTypeConfig.Tile.GetComponent<Renderer>(); // get the renderer of the tile
                         if (tileRenderer != null) // if the renderer is not null
                             tileRenderer.material.color = tileTypeConfig.color; // set the color of the tile
+
+                        if (tileTypeConfig.TileType != TileType.Obstacle && tileTypeConfig.TileType != TileType.Empty)
+                            tileTypeConfig.Tile.tag = tileType.ToString(); // set the tag of the tile
                     }
                 }
             }
